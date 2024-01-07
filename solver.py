@@ -50,9 +50,9 @@ def find_non_basic_variables(matrix):
 
 def back_substitution_for_one_solution(matrix):
     n = matrix.shape[0]
-    x = np.zeros(n)
+    x = np.zeros(n, dtype=np.int64) + Fraction()
     for m in range(n - 1, -1, -1):  # get roots
-        x[m] = (matrix[m][-1] - np.dot(matrix[m][m:-1], x[m:])) / matrix[m][m]
+        x[m] = Fraction((matrix[m][-1] - np.dot(matrix[m][m:-1], x[m:])) / matrix[m][m])
     return x
 
 
@@ -89,6 +89,10 @@ def gaussian_elimination(A, b=None):
         ext_matrix = A.copy()
     else:
         ext_matrix = np.concatenate([A, b], axis=1)
+
+    for i in ext_matrix:
+        print(*i, sep="\t")
+    print()
     ext_matrix = ext_matrix + Fraction()
     REM = get_row_echelon_form(ext_matrix)
 
@@ -118,7 +122,7 @@ def gaussian_elimination(A, b=None):
 
 
 if __name__ == "__main__":
-    N, M = 3, 2 
+    N, M = 4, 4 
     A = np.array(np.random.randint(1, 10,(N, M)), dtype=np.int64)
     b = np.array(np.random.randint(-10, 10,(N, 1)), dtype=np.int64)
     gaussian_elimination(A, b)
