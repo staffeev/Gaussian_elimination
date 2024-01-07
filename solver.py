@@ -38,6 +38,10 @@ def check_if_any_solutuion_exists(matrix):
 
 def find_non_basic_variables(matrix):
     """Function to find basic variables"""
+    n, m = matrix.shape
+    m -= 1
+    if n < m:
+        return list(range(n, m))
     row = 0
     non_basic = []
     for col in range(matrix.shape[1] - 1):
@@ -45,6 +49,8 @@ def find_non_basic_variables(matrix):
             row += 1
         else:
             non_basic.append(col)
+        if row == matrix.shape[0]:
+            break
     return non_basic
 
 
@@ -122,7 +128,7 @@ def gaussian_elimination(A, b=None):
 
 
 if __name__ == "__main__":
-    N, M = 4, 4 
+    N, M = 3, 6
     A = np.array(np.random.randint(1, 10,(N, M)), dtype=np.int64)
-    b = np.array(np.random.randint(-10, 10,(N, 1)), dtype=np.int64)
+    b = np.array(np.random.randint(-100, 100, (N, 1)), dtype=np.int64)
     gaussian_elimination(A, b)
