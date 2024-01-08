@@ -123,7 +123,7 @@ def gaussian_elimination(A, b=None):
     else:
         ext_matrix = np.concatenate([A, b], axis=1)
 
-    ext_matrix = ext_matrix + Fraction()
+    ext_matrix = ext_matrix.astype(np.int64) + Fraction()
     # Приведем матрицу к ступенчатому виду
     REM = get_row_echelon_form(ext_matrix)
 
