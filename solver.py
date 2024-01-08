@@ -112,7 +112,7 @@ def represent_root(coef, free_vars):
             continue
         sign = "-" if i < 0 else "+"
         elem = f"{abs(i)}*x{j+1}" if abs(i) != 1 else "x{j+1}"
-        ans.extend(sign, elem)
+        ans.extend([sign, elem])
     return " ".join(ans)
 
 

@@ -117,7 +117,7 @@ def represent_root(coef, free_vars):
             continue
         sign = "-" if i < 0 else "+"
         elem = f"{abs(i)}*x{j+1}" if abs(i) != 1 else "x{j+1}"
-        ans.extend(sign, elem)
+        ans.extend([sign, elem])
     return " ".join(ans)
 
 
@@ -152,6 +152,7 @@ def gaussian_elimination(A, b=None):
         print("Решений бесконечно много")
         print("Свободные переменные -", ", ".join([f"x{i+1}" for i in non_basic_variables]))
         coefs = back_substitution_for_infty_solutions(REM, REM.shape[1] - 1, non_basic_variables)
+        repr_matrix(coefs, "Матрица с единичной подматрицей с неизвестными переменными")
         basic_variables = [i for i in range(REM.shape[1] - 1) if i not in non_basic_variables]
         for i in range(coefs.shape[0]):
             root = represent_root(coefs[i][coefs.shape[1] - 1 - len(non_basic_variables):], non_basic_variables)
@@ -160,7 +161,7 @@ def gaussian_elimination(A, b=None):
 
 
 if __name__ == "__main__":
-    N, M = 4, 4
+    N, M = 4, 6
     A = np.array(np.random.randint(1, 10,(N, M)), dtype=np.int64)
     b = np.array(np.random.randint(-100, 100, (N, 1)), dtype=np.int64)
     # A = np.array([
