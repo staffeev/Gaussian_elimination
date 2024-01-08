@@ -117,7 +117,7 @@ def represent_root(coef, free_vars):
 
 
 def gaussian_elimination(A, b=None):
-    """Функция, решающая СЛАУ методов Гаусса"""
+    """Функция, решающая СЛАУ методом Гаусса"""
     if b is None:
         ext_matrix = A.copy()
     else:
@@ -145,11 +145,18 @@ def gaussian_elimination(A, b=None):
     else:
         # Если свободные переменные есть, то решений бесконечно много
         print("Решений бесконечно много")
-        print("Свободные переменные -", ", ".join([f"x{i+1}" for i in non_basic_variables]))
-        coefs = back_substitution_for_infty_solutions(REM, REM.shape[1] - 1, non_basic_variables)
-        basic_variables = [i for i in range(REM.shape[1] - 1) if i not in non_basic_variables]
+        str_free_vars = ", ".join([f"x{i+1}" for i in non_basic_variables])
+        print("Свободные переменные -", str_free_vars)
+        coefs = back_substitution_for_infty_solutions(
+            REM, REM.shape[1] - 1, non_basic_variables
+            )
+        basic_variables = [i for i in range(REM.shape[1] - 1) 
+                           if i not in non_basic_variables]
         for i in range(coefs.shape[0]):
-            root = represent_root(coefs[i][coefs.shape[1] - 1 - len(non_basic_variables):], non_basic_variables)
+            root = represent_root(
+                coefs[i][coefs.shape[1] - 1 - len(non_basic_variables):], 
+                non_basic_variables
+            )
             print(f"x{basic_variables[i] + 1} = {root}")
     
 
@@ -158,10 +165,98 @@ if __name__ == "__main__":
     N, M = 2, 2
     A = np.array(np.random.randint(1, 10,(N, M)), dtype=np.int64)
     b = np.array(np.random.randint(-100, 100, (N, 1)), dtype=np.int64)
-    # A = np.array([
-    #     [3, 2, -5, -1],
-    #     [2, -1, 3, 13],
-    #     [1, 2, -1, 9],
-    #     [12, 8, -20, -4]
-    # ])
+    # неизвестных больше, чем уравнений (4/3), решения есть (беск) ЕСТЬ
+    # A = np.array([[3, -6, 9, 13],
+    #                    [-1, 2, 1, 1],
+    #                    [1, -2, 2, 3]])
+    # b = np.array([[9], [-11], [5]])
+
+    # Решений бесконечно много
+    # Свободные переменные - x2, x4
+    # x1 = 9 + (2) * x2 + (-1 / 3) * x4
+    # x3 = -2 + (-4 / 3) * x4
+
+    #  переменных больше, чем уравнений (5/3), решения есть (беск) ЕСТЬ
+    # A = np.array([[1, -2, 4, 0, 2],
+    #               [4, -11, 21, -2, 3],
+    #               [-3, 5, -13, -4, 1]])
+    # b = np.array([[0], [-1], [-2]])
+
+    # Решений бесконечно много
+    # Свободные переменные - x4, x5
+    # x1 = 1 / 4 + (-1 / 2) * x4 + (-15 / 2) * x5
+    # x2 = 11 / 8 + (-11 / 4) * x4 + (15 / 4) * x5
+    # x3 = 5 / 8 + (-5 / 4) * x4 + (13 / 4) * x5
+
+    #  переменных больше, решений нет
+    # A = np.array([[1, 2, -3, 1],
+    #               [2, -4, 6, -2],
+    #               [3, -6, 9, -3]])
+    # b = np.array([[5], [-10], [15]])
+
+    # #  n = m, решений нет
+    # A = np.array([[1, 2, 3],
+    #               [5, 10, 6],
+    #               [8, 16, 20]])
+    # b = np.array([[4], [6], [9]])
+
+    # n = m, решения есть (одно)
+    # A = np.array([[3, 2, -5],
+    #               [2, -1, 3],
+    #               [1, 2, -1]])
+    # b = np.array([[-1], [13], [9]])
+
+    # Решение одно
+    # x1 = 3
+    # x2 = 5
+    # x3 = 4
+
+    #  n = m, решения есть (беск)
+    #  A = np.array([[1, 3, -2, -2],
+    #                [-1, -2, 1, 2],
+    #                [-2, -1, 3, 1],
+    #                [-3, -2, 3, 3]])
+    #  b = np.array([[-3], [2], [-2], [-1]])
+
+    # Решений бесконечно много
+    # Свободные переменные - x4
+    # x1 = 3 / 4 + (5 / 4) * x4
+    # x2 = -7 / 4 + (3 / 4) * x4
+    # x3 = -3 / 4 + (3 / 4) * x4
+
+    # уравнений больше, решений нет
+    # A = np.array([[1, 1, 3],
+    #               [2, 2, 6],
+    #               [3, 3, 9],
+    #               [5, 6, 8]
+    #               ])
+    # b = np.array([[-3], [2], [-2], [-1]])
+
+    #  уравнений больше, решение есть (одно)
+    # A = np.array([[3, 2, -5],
+    #               [2, -1, 3],
+    #               [1, 2, -1],
+    #                [12, 8, -20]
+    #               ])
+    # b = np.array([[-1], [13], [9], [-4]])
+
+    # Решение одно
+    # x1 = 3
+    # x2 = 5
+    # x3 = 4
+
+    #  уравнений больше, решение есть (беск)
+    # A = np.array([[1, 3, -2, -2],
+    #               [-1, -2, 1, 2],
+    #               [-2, -1, 3, 1],
+    #               [-3, -2, 3, 3],
+    #               [-6, -4, 6, 6]])
+    # b = np.array([[-3], [2], [-2], [-1], [-2]])
+
+    # Решений бесконечно много
+    # Свободные переменные - x4
+    # x1 = 3 / 4 + (5 / 4) * x4
+    # x2 = -7 / 4 + (3 / 4) * x4
+    # x3 = -3 / 4 + (3 / 4) * x4
+
     gaussian_elimination(A, b)
