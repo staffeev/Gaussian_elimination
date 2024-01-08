@@ -2,12 +2,6 @@ import numpy as np
 from fractions import Fraction
 
 
-def debug_print(*args, **kwargs):
-    global debug_flag
-    if debug_flag:
-        print(*args, **kwargs)
-
-
 def find_non_zero_row(matrix, cur_row, col):
     """Function to find row with non-zero element in `col`-th column"""
     for i in range(cur_row, matrix.shape[0]):
@@ -46,25 +40,25 @@ def find_non_basic_variables(matrix):
     """Function to find basic variables"""
     n, m = matrix.shape
     m -= 1
-    if n < m:
-        return list(range(n, m))
     row = 0
     non_basic = []
-    for col in range(matrix.shape[1] - 1):
+    for col in range(m):
         if matrix[row][col] != 0:
             row += 1
         else:
             non_basic.append(col)
         if row == matrix.shape[0]:
+            non_basic.extend(list(range(n, m)))
             break
     return non_basic
 
 
 def back_substitution_for_one_solution(matrix):
-    n = matrix.shape[0]
+    sm = matrix[np.any(matrix != 0, axis=1)]
+    n = sm.shape[0]
     x = np.zeros(n, dtype=np.int64) + Fraction()
     for m in range(n - 1, -1, -1):  # get roots
-        x[m] = Fraction((matrix[m][-1] - np.dot(matrix[m][m:-1], x[m:])) / matrix[m][m])
+        x[m] = Fraction((sm[m][-1] - np.dot(sm[m][m:-1], x[m:])) / sm[m][m])
     return x
 
 
@@ -119,7 +113,7 @@ def gaussian_elimination(A, b=None):
     if not non_basic_variables:
         print("Решение одно")
         roots = back_substitution_for_one_solution(REM)
-        for i in range(REM.shape[0]):
+        for i in range(len(roots)):
             print(f"x{i+1} = {roots[i]}")
     else:
         print("Решений бесконечно много")
@@ -133,7 +127,13 @@ def gaussian_elimination(A, b=None):
 
 
 if __name__ == "__main__":
-    N, M = 3, 6
+    N, M = 3, 4
     A = np.array(np.random.randint(1, 10,(N, M)), dtype=np.int64)
     b = np.array(np.random.randint(-100, 100, (N, 1)), dtype=np.int64)
-    gaussian_elimination(A, b)
+    A = np.array([
+        [3, 2, -5, -1],
+        [2, -1, 3, 13],
+        [1, 2, -1, 9],
+        [12, 8, -20, -4]
+    ])
+    gaussian_elimination(A)
