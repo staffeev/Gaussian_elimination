@@ -1,4 +1,5 @@
 import numpy as np
+from solver_with_prints import *
 
 
 if __name__ == "__main__":
@@ -7,11 +8,9 @@ if __name__ == "__main__":
     b = []
     print("Вводите уравнения в формате 'a1 a2 ... am | b1', где ai - коэффициенты при переменных, bj - свободные члены")
     for i in range(n):
-        *ai, _, bi = list(map(float, input().split()))
-        a.append(ai)
-        b.append([bi])
+        *ai, _, bi = list(input().split())
+        a.append(list(map(float, ai)))
+        b.append([float(bi)])
     A = np.array(a)
     b = np.array(b)
-    print()
-    debug_flag = 0 if input("Выводить решение? (1-да, 0-нет): ") == "0" else 1
-    print()
+    gaussian_elimination(A, b)
