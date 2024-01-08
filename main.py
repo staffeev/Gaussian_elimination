@@ -14,3 +14,4 @@ if __name__ == "__main__":
     A = np.array(a)
     b = np.array(b)
     gaussian_elimination(A, b)
+    exit = input("Нажмите Enter, чтобы закрыть программу")
